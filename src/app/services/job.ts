@@ -15,7 +15,7 @@ export interface Job {
 export class JobService {
 
   private apiUrl =
-    'https://job-recommendation-backend-6nfw.onrender.com/api/jobs';
+    'https://job-recommendation-backend-6nfw.onrender.com/api/jobs/recommendations/1';
 
   constructor(private http: HttpClient) {}
 
