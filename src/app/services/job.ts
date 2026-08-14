@@ -19,8 +19,8 @@ export interface Job {
 })
 export class JobService {
 
-  private apiUrl =
-    'https://job-recommendation-backend-production-5fc8.up.railway.app/api/jobs/';
+private apiUrl =
+  'https://job-recommendation-backend-production-5fc8.up.railway.app/api/jobs/';
 
   constructor(private http: HttpClient) {}
 
