@@ -22,17 +22,14 @@ export interface RecommendationResponse {
 export class JobService {
 
   private apiUrl =
-    'https://job-recommendation-backend-6nfw.onrender.com/api/jobs';
+    'https://job-recommendation-backend-6nfw.onrender.com/api/jobs/recommendations';
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
-  getRecommendations(
-    userId: number
-  ): Observable<RecommendationResponse> {
+  getRecommendations(userId: number): Observable<RecommendationResponse> {
 
     return this.http.get<RecommendationResponse>(
-      `${this.apiUrl}/recommendations/${userId}`
+      `${this.apiUrl}/${userId}`
     );
   }
 }

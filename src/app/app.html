@@ -4,37 +4,95 @@
 
     <h1>Job Recommendation</h1>
 
-    <!-- User Information -->
 
-    <div class="user-card">
+    <!-- SEARCH USER -->
 
-      <h2>User Information</h2>
+    <div class="search-card">
 
-      <p>
-        <strong>User ID:</strong>
-        {{ userId }}
-      </p>
+      <label>
+        Enter User ID
+      </label>
 
-      <p>
-        <strong>User Name:</strong>
+      <div class="search-box">
 
-        <span *ngIf="userName">
-          {{ userName }}
-        </span>
+        <input
+          type="number"
+          [(ngModel)]="userId"
+          placeholder="Enter User ID"
+        />
 
-        <span *ngIf="!userName">
-          -
-        </span>
-      </p>
+        <button
+          type="button"
+          (click)="findJobs()"
+          [disabled]="loading">
+
+          {{ loading ? 'Finding Jobs...' : 'Find Jobs' }}
+
+        </button>
+
+      </div>
 
     </div>
 
 
-    <!-- User Skills -->
+    <!-- LOADING -->
+
+    <div
+      class="loading"
+      *ngIf="loading">
+
+      Loading recommendations...
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    <div
+      class="error"
+      *ngIf="error">
+
+      {{ error }}
+
+    </div>
+
+
+    <!-- USER INFORMATION -->
+
+    <div
+      class="user-card"
+      *ngIf="!loading && userName">
+
+      <h2>User Information</h2>
+
+      <div class="user-row">
+
+        <strong>User ID:</strong>
+
+        <span>
+          {{ userId }}
+        </span>
+
+      </div>
+
+      <div class="user-row">
+
+        <strong>User Name:</strong>
+
+        <span>
+          {{ userName }}
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- USER SKILLS -->
 
     <div
       class="skills-card"
-      *ngIf="userSkills.length > 0">
+      *ngIf="!loading && userSkills.length > 0">
 
       <h2>Your Skills</h2>
 
@@ -53,41 +111,7 @@
     </div>
 
 
-    <!-- Find Button -->
-
-    <button
-      class="find-button"
-      (click)="findJobs()"
-      [disabled]="loading">
-
-      {{ loading ? 'Finding Jobs...' : 'Find Jobs' }}
-
-    </button>
-
-
-    <!-- Loading -->
-
-    <div
-      class="loading"
-      *ngIf="loading">
-
-      Loading recommendations...
-
-    </div>
-
-
-    <!-- Error -->
-
-    <div
-      class="error"
-      *ngIf="error">
-
-      {{ error }}
-
-    </div>
-
-
-    <!-- Jobs -->
+    <!-- JOBS -->
 
     <div
       class="jobs-section"
@@ -103,33 +127,45 @@
           {{ job.job }}
         </h3>
 
-        <p>
+        <div class="job-detail">
+
           <strong>Company:</strong>
           {{ job.company }}
-        </p>
 
-        <p>
+        </div>
+
+        <div class="job-detail">
+
           <strong>Location:</strong>
           {{ job.location }}
-        </p>
 
-        <p>
+        </div>
+
+        <div class="job-detail">
+
           <strong>Salary:</strong>
           ₹{{ job.salary }}
-        </p>
+
+        </div>
 
       </div>
 
     </div>
 
 
-    <!-- No Jobs -->
+    <!-- NO JOBS -->
 
     <div
       class="no-jobs"
-      *ngIf="!loading && !error && jobs.length === 0 && userName">
+      *ngIf="
+        !loading &&
+        searched &&
+        !error &&
+        userName &&
+        jobs.length === 0
+      ">
 
-      No matching jobs found.
+      No recommended jobs found.
 
     </div>
 

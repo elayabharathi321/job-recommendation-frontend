@@ -1,37 +1,45 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {
+  FormsModule
+} from '@angular/forms';
 
 import {
   JobService,
-  Job,
-  RecommendationResponse
+  Job
 } from './services/job';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule],
+
+  imports: [
+    CommonModule,
+    FormsModule
+  ],
+
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
 
-  userId = 1;
+  userId: number = 1;
 
-  userName = '';
+  userName: string = '';
 
   userSkills: string[] = [];
 
   jobs: Job[] = [];
 
-  loading = false;
+  loading: boolean = false;
 
-  error = '';
+  error: string = '';
+
+  searched: boolean = false;
 
   constructor(
     private jobService: JobService
-  ) {
-  }
+  ) {}
 
   findJobs(): void {
 
@@ -41,16 +49,17 @@ export class App {
 
     this.loading = true;
     this.error = '';
+    this.searched = true;
 
-    this.jobs = [];
+    // Clear old data
     this.userName = '';
     this.userSkills = [];
+    this.jobs = [];
 
-    this.jobService
-      .getRecommendations(this.userId)
+    this.jobService.getRecommendations(this.userId)
       .subscribe({
 
-        next: (response: RecommendationResponse) => {
+        next: (response) => {
 
           console.log('Backend Response:', response);
 
@@ -71,13 +80,22 @@ export class App {
 
         error: (error) => {
 
-          console.error('Backend Error:', error);
+          console.error('API Error:', error);
+
+          this.loading = false;
 
           this.error =
-            'Unable to load job recommendations.';
+            'Unable to load user details. Please check the User ID.';
+
+        },
+
+        complete: () => {
+
+          console.log('API request completed');
 
           this.loading = false;
         }
+
       });
   }
 }
