@@ -1,8 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormsModule
-} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 import {
   JobService,
@@ -38,25 +36,27 @@ export class App {
   searched: boolean = false;
 
   constructor(
-    private jobService: JobService
+    private jobService: JobService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   findJobs(): void {
 
     console.log('Find Jobs clicked');
-
     console.log('User ID:', this.userId);
 
     this.loading = true;
     this.error = '';
     this.searched = true;
 
-    // Clear old data
     this.userName = '';
     this.userSkills = [];
     this.jobs = [];
 
-    this.jobService.getRecommendations(this.userId)
+    this.cdr.detectChanges();
+
+    this.jobService
+      .getRecommendations(this.userId)
       .subscribe({
 
         next: (response) => {
@@ -64,18 +64,19 @@ export class App {
           console.log('Backend Response:', response);
 
           this.userName = response.userName;
-
           this.userSkills = response.userSkills;
-
           this.jobs = response.jobs;
 
           console.log('User Name:', this.userName);
-
           console.log('User Skills:', this.userSkills);
-
           console.log('Jobs:', this.jobs);
 
           this.loading = false;
+
+          // IMPORTANT
+          this.cdr.detectChanges();
+
+          console.log('UI updated');
         },
 
         error: (error) => {
@@ -87,6 +88,8 @@ export class App {
           this.error =
             'Unable to load user details. Please check the User ID.';
 
+          // IMPORTANT
+          this.cdr.detectChanges();
         },
 
         complete: () => {
@@ -94,6 +97,9 @@ export class App {
           console.log('API request completed');
 
           this.loading = false;
+
+          // IMPORTANT
+          this.cdr.detectChanges();
         }
 
       });

@@ -4,14 +4,11 @@
 
     <h1>Job Recommendation</h1>
 
-
-    <!-- SEARCH USER -->
+    <!-- USER ID -->
 
     <div class="search-card">
 
-      <label>
-        Enter User ID
-      </label>
+      <label>Enter User ID</label>
 
       <div class="search-box">
 
@@ -57,7 +54,7 @@
     </div>
 
 
-    <!-- USER INFORMATION -->
+    <!-- USER -->
 
     <div
       class="user-card"
@@ -65,30 +62,20 @@
 
       <h2>User Information</h2>
 
-      <div class="user-row">
-
+      <p>
         <strong>User ID:</strong>
+        {{ userId }}
+      </p>
 
-        <span>
-          {{ userId }}
-        </span>
-
-      </div>
-
-      <div class="user-row">
-
+      <p>
         <strong>User Name:</strong>
-
-        <span>
-          {{ userName }}
-        </span>
-
-      </div>
+        {{ userName }}
+      </p>
 
     </div>
 
 
-    <!-- USER SKILLS -->
+    <!-- SKILLS -->
 
     <div
       class="skills-card"
@@ -127,45 +114,22 @@
           {{ job.job }}
         </h3>
 
-        <div class="job-detail">
-
+        <p>
           <strong>Company:</strong>
           {{ job.company }}
+        </p>
 
-        </div>
-
-        <div class="job-detail">
-
+        <p>
           <strong>Location:</strong>
           {{ job.location }}
+        </p>
 
-        </div>
-
-        <div class="job-detail">
-
+        <p>
           <strong>Salary:</strong>
           ₹{{ job.salary }}
-
-        </div>
+        </p>
 
       </div>
-
-    </div>
-
-
-    <!-- NO JOBS -->
-
-    <div
-      class="no-jobs"
-      *ngIf="
-        !loading &&
-        searched &&
-        !error &&
-        userName &&
-        jobs.length === 0
-      ">
-
-      No recommended jobs found.
 
     </div>
 
