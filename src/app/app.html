@@ -2,152 +2,134 @@
 
   <div class="container">
 
-    <!-- Header -->
-    <div class="header">
-      <div>
-        <h1>Job Recommendation</h1>
-        <p>Find jobs that match your skills</p>
-      </div>
-    </div>
+    <h1>Job Recommendation</h1>
 
+    <!-- User Information -->
 
-    <!-- Search Card -->
-    <div class="search-card">
+    <div class="user-card">
 
-      <label>User ID</label>
+      <h2>User Information</h2>
 
-      <div class="search-row">
+      <p>
+        <strong>User ID:</strong>
+        {{ userId }}
+      </p>
 
-        <input
-          type="number"
-          [(ngModel)]="userId"
-          placeholder="Enter User ID"
-        />
+      <p>
+        <strong>User Name:</strong>
 
-        <button
-          type="button"
-          (click)="findJobs()"
-          [disabled]="loading()"
-        >
-          {{ loading() ? 'Finding...' : 'Find Jobs' }}
-        </button>
+        <span *ngIf="userName">
+          {{ userName }}
+        </span>
 
-      </div>
-
-      <p class="error" *ngIf="error()">
-        {{ error() }}
+        <span *ngIf="!userName">
+          -
+        </span>
       </p>
 
     </div>
+
+
+    <!-- User Skills -->
+
+    <div
+      class="skills-card"
+      *ngIf="userSkills.length > 0">
+
+      <h2>Your Skills</h2>
+
+      <div class="skills">
+
+        <span
+          class="skill"
+          *ngFor="let skill of userSkills">
+
+          {{ skill }}
+
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- Find Button -->
+
+    <button
+      class="find-button"
+      (click)="findJobs()"
+      [disabled]="loading">
+
+      {{ loading ? 'Finding Jobs...' : 'Find Jobs' }}
+
+    </button>
 
 
     <!-- Loading -->
-    <div class="loading" *ngIf="loading()">
 
-      <div class="spinner"></div>
+    <div
+      class="loading"
+      *ngIf="loading">
 
-      <p>Finding the best jobs for you...</p>
+      Loading recommendations...
 
     </div>
 
 
-    <!-- Results -->
+    <!-- Error -->
+
     <div
-      class="results"
-      *ngIf="!loading() && jobs().length > 0"
-    >
+      class="error"
+      *ngIf="error">
 
-      <div class="results-header">
+      {{ error }}
 
-        <div>
-          <h2>Recommended Jobs</h2>
-
-          <p>
-            {{ jobs().length }} jobs found for you
-          </p>
-        </div>
-
-      </div>
+    </div>
 
 
-      <!-- Job Cards -->
+    <!-- Jobs -->
 
-      <div class="job-grid">
+    <div
+      class="jobs-section"
+      *ngIf="!loading && jobs.length > 0">
 
-        <div
-          class="job-card"
-          *ngFor="let job of jobs()"
-        >
+      <h2>Recommended Jobs</h2>
 
-          <div class="job-top">
+      <div
+        class="job-card"
+        *ngFor="let job of jobs">
 
-            <div class="job-icon">
-              💼
-            </div>
+        <h3>
+          {{ job.job }}
+        </h3>
 
-            <span class="match">
-              Recommended
-            </span>
+        <p>
+          <strong>Company:</strong>
+          {{ job.company }}
+        </p>
 
-          </div>
+        <p>
+          <strong>Location:</strong>
+          {{ job.location }}
+        </p>
 
-
-          <h3>
-            {{ job.job }}
-          </h3>
-
-
-          <p class="company">
-            🏢 {{ job.company }}
-          </p>
-
-
-          <div class="job-info">
-
-            <span>
-              📍 {{ job.location }}
-            </span>
-
-            <span>
-              💰 ₹{{ job.salary }}
-            </span>
-
-          </div>
-
-
-          <button class="apply-btn">
-            View Job
-          </button>
-
-        </div>
+        <p>
+          <strong>Salary:</strong>
+          ₹{{ job.salary }}
+        </p>
 
       </div>
 
     </div>
 
 
-    <!-- No results -->
+    <!-- No Jobs -->
 
     <div
-      class="empty"
-      *ngIf="
-        !loading() &&
-        !error() &&
-        jobs().length === 0
-      "
-    >
+      class="no-jobs"
+      *ngIf="!loading && !error && jobs.length === 0 && userName">
 
-      <div class="empty-icon">
-        🔍
-      </div>
-
-      <h2>Find Your Next Job</h2>
-
-      <p>
-        Enter your User ID and click
-        <strong>Find Jobs</strong>
-        to see your recommendations.
-      </p>
+      No matching jobs found.
 
     </div>
 

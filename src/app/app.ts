@@ -1,15 +1,16 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { JobService, Job } from './services/job';
+
+import {
+  JobService,
+  Job,
+  RecommendationResponse
+} from './services/job';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
+  imports: [CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -17,64 +18,66 @@ export class App {
 
   userId = 1;
 
-  jobs = signal<Job[]>([]);
+  userName = '';
 
-  loading = signal(false);
+  userSkills: string[] = [];
 
-  error = signal('');
+  jobs: Job[] = [];
 
-  constructor(private jobService: JobService) {}
+  loading = false;
+
+  error = '';
+
+  constructor(
+    private jobService: JobService
+  ) {
+  }
 
   findJobs(): void {
 
     console.log('Find Jobs clicked');
 
-    const id = Number(this.userId);
+    console.log('User ID:', this.userId);
 
-    console.log('User ID:', id);
+    this.loading = true;
+    this.error = '';
 
-    if (!id || id <= 0) {
-      this.error.set('Please enter a valid User ID.');
-      return;
-    }
+    this.jobs = [];
+    this.userName = '';
+    this.userSkills = [];
 
-    // Start loading
-    this.loading.set(true);
+    this.jobService
+      .getRecommendations(this.userId)
+      .subscribe({
 
-    // Clear old error
-    this.error.set('');
+        next: (response: RecommendationResponse) => {
 
-    this.jobService.getRecommendedJobs(id).subscribe({
+          console.log('Backend Response:', response);
 
-      next: (response: Job[]) => {
+          this.userName = response.userName;
 
-        console.log('Backend Response:', response);
+          this.userSkills = response.userSkills;
 
-        // Store jobs
-        this.jobs.set(response);
+          this.jobs = response.jobs;
 
-        // IMPORTANT: stop loading
-        this.loading.set(false);
+          console.log('User Name:', this.userName);
 
-        console.log('Jobs:', this.jobs());
-        console.log('Loading:', this.loading());
+          console.log('User Skills:', this.userSkills);
 
-      },
+          console.log('Jobs:', this.jobs);
 
-      error: (err) => {
+          this.loading = false;
+        },
 
-        console.error('API Error:', err);
+        error: (error) => {
 
-        this.jobs.set([]);
+          console.error('Backend Error:', error);
 
-        this.loading.set(false);
+          this.error =
+            'Unable to load job recommendations.';
 
-        this.error.set(
-          'Unable to load recommended jobs.'
-        );
-
-      }
-
-    });
+          this.loading = false;
+        }
+      });
   }
 }
