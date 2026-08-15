@@ -2,26 +2,50 @@
 
   <div class="container">
 
-    <h1>Job Recommendation</h1>
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-icon">💼</div>
 
-    <!-- USER ID -->
+      <div>
+        <h1>Job Recommendation</h1>
+        <p>Find jobs that match your skills and profile</p>
+      </div>
+    </div>
 
+
+    <!-- SEARCH CARD -->
     <div class="search-card">
 
-      <label>Enter User ID</label>
+      <div class="search-title">
+        <span class="search-icon">🔍</span>
+
+        <div>
+          <h2>Find Your Recommended Jobs</h2>
+          <p>Enter your User ID to discover suitable opportunities</p>
+        </div>
+      </div>
+
+      <label for="userId">User ID</label>
 
       <div class="search-box">
 
-        <input
-          type="number"
-          [(ngModel)]="userId"
-          placeholder="Enter User ID"
-        />
+        <div class="input-wrapper">
+          <span>👤</span>
+
+          <input
+            id="userId"
+            type="number"
+            [(ngModel)]="userId"
+            placeholder="Enter User ID"
+          />
+        </div>
 
         <button
           type="button"
           (click)="findJobs()"
           [disabled]="loading">
+
+          <span *ngIf="!loading">🔎</span>
 
           {{ loading ? 'Finding Jobs...' : 'Find Jobs' }}
 
@@ -33,55 +57,77 @@
 
 
     <!-- LOADING -->
-
     <div
-      class="loading"
+      class="loading-card"
       *ngIf="loading">
 
-      Loading recommendations...
+      <div class="spinner"></div>
+
+      <div>
+        <strong>Finding your best jobs...</strong>
+        <p>Matching your skills with available opportunities</p>
+      </div>
 
     </div>
 
 
     <!-- ERROR -->
-
     <div
-      class="error"
+      class="error-card"
       *ngIf="error">
 
-      {{ error }}
+      <div class="error-icon">⚠️</div>
+
+      <div>
+        <strong>Something went wrong</strong>
+        <p>{{ error }}</p>
+      </div>
 
     </div>
 
 
-    <!-- USER -->
-
+    <!-- USER PROFILE -->
     <div
       class="user-card"
       *ngIf="!loading && userName">
 
-      <h2>User Information</h2>
+      <div class="profile-icon">
+        👤
+      </div>
 
-      <p>
-        <strong>User ID:</strong>
-        {{ userId }}
-      </p>
+      <div class="user-info">
 
-      <p>
-        <strong>User Name:</strong>
-        {{ userName }}
-      </p>
+        <span class="section-label">YOUR PROFILE</span>
+
+        <h2>{{ userName }}</h2>
+
+        <div class="user-id">
+          <span>🆔</span>
+          User ID: <strong>{{ userId }}</strong>
+        </div>
+
+      </div>
 
     </div>
 
 
     <!-- SKILLS -->
-
     <div
       class="skills-card"
       *ngIf="!loading && userSkills.length > 0">
 
-      <h2>Your Skills</h2>
+      <div class="section-header">
+
+        <div>
+          <span class="section-label">PROFILE</span>
+          <h2>Your Skills</h2>
+        </div>
+
+        <span class="skill-count">
+          {{ userSkills.length }} Skills
+        </span>
+
+      </div>
 
       <div class="skills">
 
@@ -89,7 +135,7 @@
           class="skill"
           *ngFor="let skill of userSkills">
 
-          {{ skill }}
+          ✓ {{ skill }}
 
         </span>
 
@@ -99,37 +145,114 @@
 
 
     <!-- JOBS -->
-
     <div
       class="jobs-section"
       *ngIf="!loading && jobs.length > 0">
 
-      <h2>Recommended Jobs</h2>
+      <div class="jobs-header">
 
+        <div>
+          <span class="section-label">MATCHED OPPORTUNITIES</span>
+
+          <h2>Recommended Jobs</h2>
+
+          <p>
+            Jobs selected based on your skills
+          </p>
+        </div>
+
+        <div class="job-count">
+          {{ jobs.length }} Jobs
+        </div>
+
+      </div>
+
+
+      <!-- JOB CARD -->
       <div
         class="job-card"
         *ngFor="let job of jobs">
 
-        <h3>
-          {{ job.job }}
-        </h3>
+        <div class="job-top">
 
-        <p>
-          <strong>Company:</strong>
-          {{ job.company }}
-        </p>
+          <div class="company-icon">
+            🏢
+          </div>
 
-        <p>
-          <strong>Location:</strong>
-          {{ job.location }}
-        </p>
+          <div class="job-title">
 
-        <p>
-          <strong>Salary:</strong>
-          ₹{{ job.salary }}
-        </p>
+            <h3>
+              {{ job.job }}
+            </h3>
+
+            <span>
+              {{ job.company }}
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="job-details">
+
+          <div class="detail">
+
+            <span class="detail-icon">📍</span>
+
+            <div>
+              <small>Location</small>
+              <strong>{{ job.location }}</strong>
+            </div>
+
+          </div>
+
+
+          <div class="detail">
+
+            <span class="detail-icon">💰</span>
+
+            <div>
+              <small>Salary</small>
+              <strong>₹{{ job.salary }}</strong>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="job-footer">
+
+          <span class="match">
+            ✓ Skill Match
+          </span>
+
+          <button class="view-btn">
+            View Job →
+          </button>
+
+        </div>
 
       </div>
+
+    </div>
+
+
+    <!-- NO JOBS -->
+    <div
+      class="no-jobs"
+      *ngIf="!loading && userName && jobs.length === 0">
+
+      <div class="no-jobs-icon">
+        🔎
+      </div>
+
+      <h2>No Recommended Jobs</h2>
+
+      <p>
+        We couldn't find jobs matching your current skills.
+      </p>
 
     </div>
 
